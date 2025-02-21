@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
+
+  <view-entity entity-name="FindCustomerView" package="customerFinder">
+    <member-entity entity-alias="PTY" entity-name="customerFinder.Party"/>
+    <member-entity entity-alias="ORG" entity-name="customerFinder.Organization" join-from-alias="PTY" join-optional="true">
+      <key-map field-name="partyId"/></member-entity>
+    <member-entity entity-alias="PER" entity-name="customerFinder.Person" join-from-alias="PTY" join-optional="true">
+      <key-map field-name="partyId"/></member-entity>
+    <member-entity entity-alias="PR" entity-name="customerFinder.PartyRole" join-from-alias="PTY">
+      <key-map field-name="partyId"/></member-entity>
+    <member-entity entity-alias="PCM" entity-name="customerFinder.contact.PartyContactMech" join-from-alias="PTY" join-optional="true">
+      <key-map field-name="partyId"/></member-entity>
+    <member-entity entity-alias="CM" entity-name="customerFinder.contact.ContactMech" join-from-alias="PCM" join-optional="true">
+      <key-map field-name="contactMechId"/></member-entity>
+    <member-entity entity-alias="PA" entity-name="customerFinder.contact.PostalAddress" join-from-alias="PCM" join-optional="true">
+      <key-map field-name="contactMechId"/></member-entity>
+    <member-entity entity-alias="TNPCM" entity-name="customerFinder.contact.PartyContactMech" join-from-alias="PTY" join-optional="true">
+      <key-map field-name="partyId"/></member-entity>
+    <member-entity entity-alias="TN" entity-name="customerFinder.contact.TelecomNumber" join-from-alias="TNPCM" join-optional="true">
+      <key-map field-name="contactMechId"/></member-entity>
+
+
+    <alias entity-alias="PTY" name="partyId"/>
+    <alias entity-alias="PTY" name="partyTypeEnumId"/>
+
+    <alias entity-alias="PR" name="roleTypeId"/>
+    <alias entity-alias="PER" name="firstName"/>
+    <alias entity-alias="PER" name="middleName"/>
+    <alias entity-alias="PER" name="lastName"/>
+    <alias entity-alias="PER" name="gender"/>
+    <alias entity-alias="PER" name="birthDate"/>
+
+    <alias entity-alias="ORG" name="organizationName"/>
+    <alias entity-alias="ORG" name="annualRevenue"/>
+    <alias entity-alias="ORG" name="numEmployees"/>
+
+
+    <alias entity-alias="CM" name="infoString"/>
+    <alias entity-alias="PCM" name="fromDate"/>
+    <alias entity-alias="PCM" name="thruDate"/>
+    <alias entity-alias="PCM" name="thruDate"/>
+    <alias entity-alias="PCM" name="contactMechPurposeId"/>
+
+    <alias entity-alias="PA" name="address1"/>
+    <alias entity-alias="PA" name="address2"/>
+    <alias entity-alias="PA" name="city"/>
+    <alias entity-alias="PA" name="postalCode"/>
+
+    <alias entity-alias="TN" name="countryCode"/>
+    <alias entity-alias="TN" name="areaCode"/>
+    <alias entity-alias="TN" name="contactNumber"/>
+
+    <entity-condition>
+      <econdition field-name="roleTypeId" operator="equals" value="Customer"/>
+      <date-filter entity-alias="PCM" from-field-name="fromDate" thru-field-name="thruDate" />
+    </entity-condition>
+
+  </view-entity>
+</entities>

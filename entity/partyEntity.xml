@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-3.xsd">
+
+  <entity entity-name="Party" package="customerFinder" short-alias="parties">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="partyTypeEnumId" type="id"/>
+
+    <relationship type="one" title="PartyType" related="moqui.basic.Enumeration" short-alias="type">
+      <key-map field-name="partyTypeEnumId"/></relationship>
+
+    <relationship type="one-nofk" related="customerFinder.Organization" short-alias="organization" mutable="true"/>
+    <relationship type="one-nofk" related="customerFinder.Person" short-alias="person" mutable="true"/>
+
+    <relationship type="many" related="customerFinder.PartyRole" short-alias="roles">
+      <key-map field-name="partyId"/></relationship>
+
+    <relationship type="many" related="customerFinder.contact.PartyContactMech" short-alias="contactMechs">
+      <key-map field-name="partyId"/></relationship>
+
+    <seed-data>
+      <moqui.basic.EnumerationType description="Party Type" enumTypeId="PartyType"/>
+      <moqui.basic.Enumeration description="Person" enumId="PtyPerson" enumTypeId="PartyType"/>
+      <moqui.basic.Enumeration description="Organization" enumId="PtyOrganization" enumTypeId="PartyType"/>
+    </seed-data>
+
+  </entity>
+  <entity entity-name="Organization" package="customerFinder">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="organizationName" type="text-medium"/>
+    <field name="annualRevenue" type="currency-amount"/>
+    <field name="numEmployees" type="number-integer"/>
+    <relationship type="one" related="customerFinder.Party"/>
+
+  </entity>
+
+  <entity entity-name="Person" package="customerFinder">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="salutation" type="text-medium"/>
+    <field name="firstName" type="text-medium"/>
+    <field name="middleName" type="text-medium"/>
+    <field name="lastName" type="text-medium" enable-audit-log="update"/>
+    <field name="gender" type="text-indicator"/>
+    <field name="birthDate" type="date"/>
+
+    <relationship type="one" related="customerFinder.Party"/>
+
+  </entity>
+
+  <entity entity-name="PartyRole" package="customerFinder">
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <relationship type="one" related="customerFinder.Party" short-alias="party"/>
+    <relationship type="one" related="customerFinder.RoleType" short-alias="role"/>
+  </entity>
+
+  <entity entity-name="RoleGroupMember" package="customerFinder">
+    <field name="roleGroupEnumId" type="id" is-pk="true"/>
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <relationship type="one" title="RoleGroup" related="moqui.basic.Enumeration">
+      <key-map field-name="roleGroupEnumId"/></relationship>
+    <relationship type="one" related="customerFinder.RoleType"/>
+    <seed-data>
+      <moqui.basic.EnumerationType description="Role Group" enumTypeId="RoleGroup"/>
+    </seed-data>
+  </entity>
+
+  <entity entity-name="RoleType" package="customerFinder" >
+
+    <field name="roleTypeId" type="id" is-pk="true"/>
+    <field name="parentTypeId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="Parent" related="customerFinder.RoleType">
+      <key-map field-name="parentTypeId" related="roleTypeId"/></relationship>
+    <seed-data>
+      <!-- in party roles we studied that party roles can be person roles organization roles anf some roles can be common -->
+      <!-- Some Common roles-->
+      <customerFinder.RoleType description="Competitor" roleTypeId="Competitor"/>
+      <customerFinder.RoleType description="Customer" roleTypeId="Customer"/>
+      <customerFinder.RoleType description="Distributor" roleTypeId="Distributor"/>
+      <customerFinder.RoleType description="Manufacturer" roleTypeId="Manufacturer"/>
+      <customerFinder.RoleType description="Owner"  roleTypeId="Owner"/>
+      <!--Some person roles-->
+      <customerFinder.RoleType description="Accountant" roleTypeId="Accountant"/>
+      <customerFinder.RoleType description="Buyer" roleTypeId="Buyer"/>
+      <customerFinder.RoleType description="Cashier" roleTypeId="Cashier"/>
+      <customerFinder.RoleType description="Employee" roleTypeId="Employee"/>
+
+      <moqui.basic.Enumeration description="Person Roles" enumId="RgpPerson" enumTypeId="RoleGroup"/>
+      <customerFinder.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Accountant"/>
+      <customerFinder.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Buyer"/>
+      <customerFinder.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Cashier"/>
+      <customerFinder.RoleGroupMember roleGroupEnumId="RgpPerson" roleTypeId="Employee"/>
+
+      <!-- some for organization-->
+      <customerFinder.RoleType description="Association" roleTypeId="OrgAssociation"/>
+      <customerFinder.RoleType description="Department" roleTypeId="OrgDepartment"/>
+      <customerFinder.RoleType description="Internal Organization" roleTypeId="OrgInternal"/>
+
+      <moqui.basic.Enumeration description="Organization Roles" enumId="RgpOrganization" enumTypeId="RoleGroup"/>
+      <customerFinder.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgAssociation"/>
+      <customerFinder.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgDepartment"/>
+      <customerFinder.RoleGroupMember roleGroupEnumId="RgpOrganization" roleTypeId="OrgInternal"/>
+
+    </seed-data>
+  </entity>
+
+  <entity entity-name="ContactMech" package="customerFinder.contact" short-alias="contactMechs">
+    <field name="contactMechId" type="id" is-pk="true"/>
+    <field name="contactMechTypeEnumId" type="id"/>
+    <field name="infoString" type="text-medium"/>
+    <field name="trustLevelEnumId" type="id"/>
+
+    <relationship type="one" title="ContactMechType" related="moqui.basic.Enumeration" short-alias="type">
+      <key-map field-name="contactMechTypeEnumId"/></relationship>
+    <relationship type="one" title="ContactPaymentTrustLevel" related="moqui.basic.Enumeration" short-alias="trustLevel">
+      <key-map field-name="trustLevelEnumId"/></relationship>
+
+    <relationship type="one-nofk" related="customerFinder.contact.TelecomNumber" short-alias="telecomNumber" mutable="true"/>
+    <relationship type="one-nofk" related="customerFinder.contact.PostalAddress" short-alias="postalAddress" mutable="true"/>
+    <relationship type="many" related="customerFinder.contact.PartyContactMech" short-alias="parties">
+      <key-map field-name="contactMechId"/></relationship>
+
+    <seed-data>
+      <moqui.basic.EnumerationType description="Contact/Payment Trust Level" enumTypeId="ContactPaymentTrustLevel"/>
+      <moqui.basic.Enumeration enumId="Verified" description="Verified" enumTypeId="ContactPaymentTrustLevel"/>
+      <moqui.basic.Enumeration enumId="Invalid" description="Invalid" enumTypeId="ContactPaymentTrustLevel"/>
+      <moqui.basic.Enumeration enumId="Incomplete" description="Incomplete"  enumTypeId="ContactPaymentTrustLevel"/>
+      <moqui.basic.Enumeration enumId="Blacklisted" description="Blacklisted" enumTypeId="ContactPaymentTrustLevel"/>
+
+      <moqui.basic.EnumerationType description="ContactMech Type" enumTypeId="ContactMechType"/>
+      <moqui.basic.Enumeration description="PostalAddress" enumId="CmtPostalAddress" enumTypeId="ContactMechType"/>
+      <moqui.basic.Enumeration description="TelecomNumber" enumId="CmtTelecomNumber" enumTypeId="ContactMechType"/>
+    </seed-data>
+  </entity>
+
+  <entity entity-name="ContactMechPurpose" package="customerFinder.contact" use="configuration" cache="true">
+    <field name="contactMechPurposeId" type="id" is-pk="true"/>
+    <field name="contactMechTypeEnumId" type="id"/>
+    <field name="description" type="text-medium"/>
+    <relationship type="one" title="ContactMechType" related="moqui.basic.Enumeration">
+      <key-map field-name="contactMechTypeEnumId"/></relationship>
+    <seed-data>
+      <ContactMechPurpose contactMechPurposeId="PostalPrimary" contactMechTypeEnumId="CmtPostalAddress"/>
+      <ContactMechPurpose contactMechPurposeId="PostalSecondary" contactMechTypeEnumId="CmtPostalAddress"/>
+      <ContactMechPurpose contactMechPurposeId="PostalHome" contactMechTypeEnumId="CmtPostalAddress"/>
+      <ContactMechPurpose contactMechPurposeId="PostalWork" contactMechTypeEnumId="CmtPostalAddress"/>
+      <ContactMechPurpose contactMechPurposeId="PostalOffice" contactMechTypeEnumId="CmtPostalAddress"/>
+
+      <ContactMechPurpose contactMechPurposeId="PhonePrimary" contactMechTypeEnumId="CmtTelecomNumber"/>
+      <ContactMechPurpose contactMechPurposeId="PhoneSecondray" contactMechTypeEnumId="CmtTelecomNumber"/>
+      <ContactMechPurpose contactMechPurposeId="PhoneHome" contactMechTypeEnumId="CmtTelecomNumber"/>
+      <ContactMechPurpose contactMechPurposeId="PhoneWork" contactMechTypeEnumId="CmtTelecomNumber"/>
+      <ContactMechPurpose contactMechPurposeId="PhoneOffice" contactMechTypeEnumId="CmtTelecomNumber"/>
+    </seed-data>
+  </entity>
+  <entity entity-name="PartyContactMech" package="customerFinder.contact" >
+    <field name="partyId" type="id" is-pk="true"/>
+    <field name="contactMechId" type="id" is-pk="true"/>
+    <field name="contactMechPurposeId" type="id" is-pk="true"/>
+    <field name="fromDate" type="date-time" is-pk="true"/>
+    <field name="thruDate" type="date-time"/>
+
+    <relationship type="one" related="customerFinder.Party"/>
+    <relationship type="one" related="customerFinder.contact.ContactMech" short-alias="contactMech" mutable="true"/>
+    <relationship type="one" related="customerFinder.contact.ContactMechPurpose" short-alias="purpose"/>
+    <relationship type="one-nofk" related="customerFinder.contact.PostalAddress" short-alias="postalAddress" mutable="true"/>
+    <relationship type="one-nofk" related="customerFinder.contact.TelecomNumber" short-alias="telecomNumber" mutable="true"/>
+  </entity>
+  <entity entity-name="PostalAddress" package="customerFinder.contact" >
+    <field name="contactMechId" type="id" is-pk="true"/>
+    <field name="toName" type="text-medium"/>
+    <field name="attnName" type="text-medium"/>
+    <field name="address1" type="text-medium"/>
+    <field name="address2" type="text-medium"/>
+    <field name="directions" type="text-long"/>
+    <field name="city" type="text-medium"/>
+    <field name="postalCode" type="text-short"/>
+
+    <relationship type="one" related="customerFinder.contact.ContactMech"/>
+  </entity>
+
+  <entity entity-name="TelecomNumber" package="customerFinder.contact" >
+    <field name="contactMechId" type="id" is-pk="true"/>
+    <field name="countryCode" type="text-short"/>
+    <field name="areaCode" type="text-short"/>
+    <field name="contactNumber" type="text-short"/>
+
+    <relationship type="one" related="customerFinder.contact.ContactMech"/>
+
+  </entity>
+
+
+</entities>

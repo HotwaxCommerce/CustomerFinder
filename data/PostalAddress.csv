@@ -1,0 +1,12 @@
+customerFinder.contact.PostalAddress,demo
+contactMechId,toName,attnName,address1,address2,directions,city,postalCode
+CM3,Company A,HR Dept,123 Main St,Suite 100,Next to park,New York,10001
+CM6,Company B,Finance Dept,456 Elm St,Floor 3,Near the river,San Francisco,94101
+CM9,Alpha Tech,Legal Dept,303 Cedar Ln,Floor 2,Near the city hall,Los Angeles,90001
+CM12,Beta Solutions,Support Team,789 Oak Ave,Building 2,Behind the mall,Chicago,60601
+CM15,Gamma Corp,IT Dept,159 Pine Rd,Office 5,Next to the bank,Houston,77001
+CM18,Delta Systems,Admin,951 Maple Blvd,Warehouse 8,Across the bridge,Seattle,98101
+CM21,Omega Enterprises,Sales,852 Cedar St,Unit 7,Opposite metro station,Dallas,75201
+CM24,Zeta Tech,Development,369 Willow Dr,Block C,Near school,Phoenix,85001
+CM27,Sigma Innovations,Marketing,741 Birch Ln,Room 12,Near railway station,Miami,33101
+CM30,Epsilon Group,Operations,963 Spruce Ave,Suite 25,Near town hall,Denver,80201

@@ -1,0 +1,60 @@
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+  <service verb="find" noun="Customer" type="script"
+           location="component://customerFinder/service/partyServices/findCustomer.groovy">
+    <in-parameters>
+      <parameter name="partyId"/>
+      <parameter name="combinedName"/>
+      <parameter name="emailAddress"/>
+      <parameter name="contactNumber"/>
+      <parameter name="address"/>
+      <parameter name="city"/>
+      <parameter name="postalCode"/>
+
+      <parameter name="pageIndex" type="Integer" default="0"/>
+      <parameter name="pageSize" type="Integer" default="20"/>
+      <parameter name="pageNoLimit" type="Boolean" default="false"/>
+    </in-parameters>
+    <out-parameters>
+      <parameter name="partyIdList" type="List">
+        <parameter name="partyId"/></parameter>
+      <parameter name="count" type="Integer"/>
+      <parameter name="listPageIndex" type="Integer"/>
+      <parameter name="listPageSize" type="Integer"/>
+      <parameter name="low" type="Integer"/>
+      <parameter name="high" type="Integer"/>
+    </out-parameters>
+  </service>
+  <service verb="create" noun="Customer" type="script"
+           location="component://customerFinder/service/partyServices/createCustomer.groovy">
+    <in-parameters>
+      <parameter name="emailAddress"/>
+      <parameter name="firstName"/>
+      <parameter name="lastName"/>
+    </in-parameters>
+    <out-parameters>
+      <parameter name="partyId"/>
+    </out-parameters>
+  </service>
+  <service verb="update" noun="Customer" type="script"
+           location="component://customerFinder/service/partyServices/updateCustomer.groovy">
+    <in-parameters>
+      <parameter name="emailAddress"/>
+      <parameter name="postalAddress"/>
+      <parameter name="toName"/>
+      <parameter name="attnName"/>
+      <parameter name="address1"/>
+      <parameter name="address2"/>
+      <parameter name="directions"/>
+      <parameter name="city"/>
+      <parameter name="postalCode"/>
+      <parameter name="countryCode"/>
+      <parameter name="areaCode"/>
+      <parameter name="mobileNumber"/>
+    </in-parameters>
+    <out-parameters>
+      <parameter name="partyId"/>
+      <parameter name="contactMechIdList" type="List"/>
+    </out-parameters>
+  </service>
+
+</services>
